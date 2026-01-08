@@ -8,53 +8,76 @@ _A Python-driven automation and notification engine featuring secure, scalable, 
 
 ```mermaid
 flowchart TD
-    %% SYSTEM GROUPS
-    subgraph Scheduler_Layer
-        A1[Job Scheduler]
-        A1 -->|Enqueue Jobs| Q1[Job Queue]
-    end
+    %% Batch Orchestration
+    BO[Batch Orchestrator<br>(batch_scan.py via cron or CLI)] -->|Pulls subdomains to scan| DB[(MySQL Database)]
+    BO -->|Launches per-target scans| S1[Scanner Scripts]
 
-    subgraph Worker_Execution_Layer
-        Q1 --> P1[Worker Pool]
-        P1 -.-> T1[Thread Control]
-        P1 -->|Parallel Tasks| W1[Job Worker]
-        W1 -->|Process Data| DT[Datatables Memory]
-        T1 --> P1
+    %% Scanner Scripts
+    subgraph "Scanner Scripts (per target or batch)"
+        S1a[Subdub.py<br>Subdomain Enum]
+        S1b[Filezer.py<br>File Discovery]
+        S1c[Panelz.py<br>Admin Panel Scan]
+        S1d[Cveez.py<br>CVE Scan]
+        S1e[Cnamer.py<br>Takeover Detection]
+        S1f[Hoster2.py<br>Service Enumeration]
+        S1g[Miscon.py<br>Misconfig Detection]
     end
+    S1 --> S1a
+    S1 --> S1b
+    S1 --> S1c
+    S1 --> S1d
+    S1 --> S1e
+    S1 --> S1f
+    S1 --> S1g
 
-    subgraph Persistence_Data_Layer
-        DT -->|Batch Ops| DB[MySQL Database]
-        DB -- Read Write --> DT
-    end
+    %% Script-centric Worker Pools
+    S1a --"ThreadPoolExecutor (per script)"--> TP1[Worker Pool]
+    S1b --"ThreadPoolExecutor (per script)"--> TP2[Worker Pool]
+    S1c --"ThreadPoolExecutor (per script)"--> TP3[Worker Pool]
+    S1d --"ThreadPoolExecutor (per script)"--> TP4[Worker Pool]
+    S1e --"ThreadPoolExecutor (per script)"--> TP5[Worker Pool]
+    S1f --"ThreadPoolExecutor (per script)"--> TP6[Worker Pool]
+    S1g --"ThreadPoolExecutor (per script)"--> TP7[Worker Pool]
 
-    subgraph Integrations
-        W1 -- Notify --> SLK[Slack Bot]
-        W1 -- API Call --> EXT[API Integrations]
-    end
+    %% In-memory Data Processing
+    TP1 --"File & memory lists"--> DT1[Datatables<br>(in-memory/filelists)]
+    TP2 --> DT1
+    TP3 --> DT1
+    TP4 --> DT1
+    TP5 --> DT1
+    TP6 --> DT1
+    TP7 --> DT1
 
-    %% TEST AUTOMATION
+    %% Central MySQL DB
+    S1a -->|Findings| DB
+    S1b -->|Findings| DB
+    S1c -->|Findings| DB
+    S1d -->|Findings| DB
+    S1e -->|Findings/Claims| DB
+    S1f -->|Findings| DB
+    S1g -->|Findings| DB
+
+    %% Slack Notification Utility
+    S1a --"Status/Errors"--> SLK[Slack Webhook Utility]
+    S1b --"Status/Errors"--> SLK
+    S1c --"Status/Errors"--> SLK
+    S1d --"Status/Errors"--> SLK
+    S1e --"Status/Errors"--> SLK
+    S1f --"Status/Errors"--> SLK
+    S1g --"Status/Errors"--> SLK
+
+    %% Azure Takeover Automator Callout
+    S1e --"Azure Claims"--> AZ[AUTOMATED AZURE TAKEOVER<br>multi-region fallback<br>evidence logging]
+
+    %% Test Automation Callout
     subgraph Test_Automation
-      TA1[Unit Tests]
-      TA2[Integration Tests]
-      TA3[Threading Tests]
+      T1[Unit Tests]
+      T2[Concurrency Tests]
+      T3[Integration Tests]
     end
-    TA1 -.-> A1
-    TA2 -.-> W1
-    TA2 -.-> DB
-    TA3 -.-> P1
-
-    %% STYLES
-    style Q1 fill:#b9e3fa,stroke:#333,stroke-width:2px
-    style P1 fill:#b4d5ff,stroke:#333,stroke-width:2px
-    style W1 fill:#d2e7c5,stroke:#333,stroke-width:2px
-    style DT fill:#ffe4b3,stroke:#333,stroke-width:2px
-    style DB fill:#fdc,stroke:#333,stroke-width:2px
-    style SLK fill:#f9f,stroke:#333,stroke-width:2px
-    style EXT fill:#e5e5e5,stroke:#333,stroke-width:2px
-    style T1 fill:#f7fafc,stroke:#333,stroke-width:1px
-    style TA1 fill:#fffbe6,stroke:#888,stroke-dasharray: 5 5;
-    style TA2 fill:#fffbe6,stroke:#888,stroke-dasharray: 5 5;
-    style TA3 fill:#fffbe6,stroke:#888,stroke-dasharray: 5 5;
+    T1 -.-> S1a
+    T2 -.-> TP1
+    T3 -.-> S1e
 ```
 
 **Key Components:**

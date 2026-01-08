@@ -9,34 +9,34 @@ _A Python-driven automation and notification engine featuring secure, scalable, 
 ```mermaid
 flowchart TD
     %% SYSTEM GROUPS
-    subgraph "Scheduler Layer"
-        A1[Job Scheduler<br/>(APScheduler/schedule)]
+    subgraph Scheduler_Layer
+        A1[Job Scheduler (APScheduler)]
         A1 -->|Enqueue Jobs| Q1[Job Queue]
     end
 
-    subgraph "Worker & Execution Layer"
+    subgraph Worker_and_Execution_Layer
         Q1 --> P1[Worker Pool]
-        P1 -.-> T1["Thread Controls<br/>(ThreadPoolExecutor)"]
+        P1 -.-> T1[Thread Control]
         P1 -->|Parallel Tasks| W1[Job Worker]
-        W1 -->|Process Data| DT[Datatables<br/>(In-Memory, Pandas)]
+        W1 -->|Process Data| DT[Datatables Memory]
         T1 --> P1
     end
 
-    subgraph "Persistence & Data Layer"
-        DT -->|Batch Ops/Transform| DB[(MySQL Database)]
-        DB <-->|Read/Write| DT
+    subgraph Persistence_and_Data_Layer
+        DT -->|Batch Ops| DB[MySQL Database]
+        DB -- Read Write --> DT
     end
 
-    subgraph "Integrations"
-        W1 -- Notify --> SLK[Slack Bot<br/>(slack_sdk)]
-        W1 -- API Call --> EXT[3rd Party APIs]
+    subgraph Integrations
+        W1 -- Notify --> SLK[Slack Bot]
+        W1 -- API Call --> EXT[API Integrations]
     end
 
     %% TEST AUTOMATION
-    subgraph "Test Automation"
-      TA1["Unit Tests<br/>(pytest, unittest)"]
-      TA2["Integration/E2E Tests"]
-      TA3["Performance/Threading Tests"]
+    subgraph Test_Automation
+      TA1[Unit Tests]
+      TA2[Integration Tests]
+      TA3[Threading Tests]
     end
     TA1 -.-> A1
     TA2 -.-> W1

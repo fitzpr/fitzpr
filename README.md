@@ -10,11 +10,11 @@ _A Python-driven automation and notification engine featuring secure, scalable, 
 flowchart TD
     %% SYSTEM GROUPS
     subgraph Scheduler_Layer
-        A1[Job Scheduler (APScheduler)]
+        A1[Job Scheduler]
         A1 -->|Enqueue Jobs| Q1[Job Queue]
     end
 
-    subgraph Worker_and_Execution_Layer
+    subgraph Worker_Execution_Layer
         Q1 --> P1[Worker Pool]
         P1 -.-> T1[Thread Control]
         P1 -->|Parallel Tasks| W1[Job Worker]
@@ -22,7 +22,7 @@ flowchart TD
         T1 --> P1
     end
 
-    subgraph Persistence_and_Data_Layer
+    subgraph Persistence_Data_Layer
         DT -->|Batch Ops| DB[MySQL Database]
         DB -- Read Write --> DT
     end

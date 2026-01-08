@@ -8,68 +8,95 @@ _A Python-driven automation and notification engine featuring secure, scalable, 
 
 ```mermaid
 flowchart TD
-    BO[Batch Orchestrator batch scan py]
-    DB[MySQL Database]
-    SLK[Slack Notifier]
-    DT[Datatables and Files]
-    AZ[Azure Takeover Automation]
+  %% Top-level batch orchestrator
+  BO["Batch Orchestrator (batch_scan.py)"]
+  BO --> DB[(MySQL Database)]
 
-    BO -->|Pulls Subdomains| DB
-    BO -->|Start Scripts| S1
+  %% Scanner group
+  subgraph Scanners
+    direction LR
+    S1a["Subdub.py"]
+    S1b["Filezer.py"]
+    S1c["Panelz.py"]
+    S1d["Cveez.py"]
+    S1e["Cnamer.py"]
+    S1f["Hoster2.py"]
+    S1g["Miscon.py"]
+  end
 
-    %% Each scanner script has its own node and thread pool
-    S1a[Subdub Scanner]
-    S1b[Filezer Scanner]
-    S1c[Panelz Scanner]
-    S1d[Cveez Scanner]
-    S1e[Cnamer Scanner]
-    S1f[Hoster2 Scanner]
-    S1g[Miscon Scanner]
+  %% Worker pools (one under each script for clarity)
+  subgraph WorkerPools
+    direction LR
+    TP1["Worker Pool"]
+    TP2["Worker Pool"]
+    TP3["Worker Pool"]
+    TP4["Worker Pool"]
+    TP5["Worker Pool"]
+    TP6["Worker Pool"]
+    TP7["Worker Pool"]
+  end
 
-    S1 --> S1a
-    S1 --> S1b
-    S1 --> S1c
-    S1 --> S1d
-    S1 --> S1e
-    S1 --> S1f
-    S1 --> S1g
+  %% Datafiles/datatable (single shared, lower center)
+  DT["Datatables & Files"]
 
-    %% Worker pools and data flow
-    S1a --> TP1[Worker Pool] --> DT
-    S1b --> TP2[Worker Pool] --> DT
-    S1c --> TP3[Worker Pool] --> DT
-    S1d --> TP4[Worker Pool] --> DT
-    S1e --> TP5[Worker Pool] --> DT
-    S1f --> TP6[Worker Pool] --> DT
-    S1g --> TP7[Worker Pool] --> DT
+  %% Slack notification (right side)
+  SLK["Slack Notifier"]
 
-    %% Reporting and notifications
-    S1a --> SLK
-    S1b --> SLK
-    S1c --> SLK
-    S1d --> SLK
-    S1e --> SLK
-    S1f --> SLK
-    S1g --> SLK
+  %% Azure Takeover special (off to the right for Cnamer)
+  AZ["Azure Takeover Automation"]
 
-    S1a --> DB
-    S1b --> DB
-    S1c --> DB
-    S1d --> DB
-    S1e --> DB
-    S1f --> DB
-    S1g --> DB
+  %% Wiring: top orchestrator launches scripts
+  BO --> S1a
+  BO --> S1b
+  BO --> S1c
+  BO --> S1d
+  BO --> S1e
+  BO --> S1f
+  BO --> S1g
+  %% Each script to its unique worker pool, nice map
+  S1a --> TP1
+  S1b --> TP2
+  S1c --> TP3
+  S1d --> TP4
+  S1e --> TP5
+  S1f --> TP6
+  S1g --> TP7
+  %% All pools connect down to shared datatable/files
+  TP1 --> DT
+  TP2 --> DT
+  TP3 --> DT
+  TP4 --> DT
+  TP5 --> DT
+  TP6 --> DT
+  TP7 --> DT
+  %% DB: orchestrator reads from; each script writes to
+  S1a -- Results --> DB
+  S1b -- Results --> DB
+  S1c -- Results --> DB
+  S1d -- Results --> DB
+  S1e -- Results/Claims --> DB
+  S1f -- Results --> DB
+  S1g -- Results --> DB
+  %% Slack Notifier
+  S1a -- Notify --> SLK
+  S1b -- Notify --> SLK
+  S1c -- Notify --> SLK
+  S1d -- Notify --> SLK
+  S1e -- Notify --> SLK
+  S1f -- Notify --> SLK
+  S1g -- Notify --> SLK
+  %% Cnamer to Azure
+  S1e -- Claim --> AZ
 
-    %% Azure takeover is special to Cnamer
-    S1e --> AZ
-
-    %% Testing as extra nodes
-    T1[Unit Tests]
-    T2[Concurrency Tests]
-    T3[Integration Tests]
-    T1 -.-> S1a
-    T2 -.-> TP1
-    T3 -.-> S1e
+  %% Testing/QA (at very bottom)
+  subgraph Testing_Coverage["Test Automation"]
+    T1["Unit Tests"]
+    T2["Concurrency Tests"]
+    T3["Integration Tests"]
+  end
+  T1 -.-> S1a
+  T2 -.-> TP1
+  T3 -.-> S1e
 ```
 
 **Key Components:**

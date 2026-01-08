@@ -8,22 +8,19 @@ _A Python-driven automation and notification engine featuring secure, scalable, 
 
 ```mermaid
 flowchart TB
-  %% Batch Orchestrator (bright blue for visibility)
-  subgraph Batch_Orchestrator
-    BO[batch_scan.py<br><b>cron/CLI entry</b>]
-  end
+  %% Batch Orchestrator
+  BO["Batch Orchestrator\n(batch_scan.py, cron/CLI)"]
   style BO fill:#158aff,color:#fff,stroke:#0055aa,stroke-width:2px
 
-  %% Scanner Scripts (violet-pink for visibility)
-  subgraph Scanners
-    S1a[Subdub.py<br><i>Subdomain discovery</i>]
-    S1b[Filezer.py<br><i>File discovery</i>]
-    S1c[Panelz.py<br><i>Admin panel finder</i>]
-    S1d[Cveez.py<br><i>Vuln/CVE scan</i>]
-    S1e[Cnamer.py<br><i>Takeover checks</i>]
-    S1f[Hoster2.py<br><i>Host/service enum</i>]
-    S1g[Miscon.py<br><i>Misconfiguration scan</i>]
-  end
+  %% Scanners (grouped, but laid out vertically)
+  S1a["Subdub.py\nSubdomain Discovery"]
+  S1b["Filezer.py\nFile Discovery"]
+  S1c["Panelz.py\nAdmin Panel Finder"]
+  S1d["Cveez.py\nCVE Scan"]
+  S1e["Cnamer.py\nTakeover Checks"]
+  S1f["Hoster2.py\nHost/Service Enum"]
+  S1g["Miscon.py\nMisconfiguration Scan"]
+
   style S1a fill:#e658ea,color:#fff,stroke:#9800a1,stroke-width:2px
   style S1b fill:#e658ea,color:#fff,stroke:#9800a1,stroke-width:2px
   style S1c fill:#e658ea,color:#fff,stroke:#9800a1,stroke-width:2px
@@ -32,16 +29,15 @@ flowchart TB
   style S1f fill:#e658ea,color:#fff,stroke:#9800a1,stroke-width:2px
   style S1g fill:#e658ea,color:#fff,stroke:#9800a1,stroke-width:2px
 
-  %% Worker Pools (green for visibility)
-  subgraph Worker_Pools
-    TP1[ThreadPool<br>10 workers]
-    TP2[ThreadPool<br>10 workers]
-    TP3[ThreadPool<br>10 workers]
-    TP4[ThreadPool<br>15 workers]
-    TP5[ThreadPool<br>5 workers]
-    TP6[ThreadPool<br>10 workers]
-    TP7[ThreadPool<br>8 workers]
-  end
+  %% Worker Pools (each script has its own worker pool below it)
+  TP1["Worker Pool\n(10 workers)"]
+  TP2["Worker Pool\n(10 workers)"]
+  TP3["Worker Pool\n(10 workers)"]
+  TP4["Worker Pool\n(15 workers)"]
+  TP5["Worker Pool\n(5 workers)"]
+  TP6["Worker Pool\n(10 workers)"]
+  TP7["Worker Pool\n(8 workers)"]
+
   style TP1 fill:#2fd05c,color:#fff,stroke:#0e6626,stroke-width:2px
   style TP2 fill:#2fd05c,color:#fff,stroke:#0e6626,stroke-width:2px
   style TP3 fill:#2fd05c,color:#fff,stroke:#0e6626,stroke-width:2px
@@ -50,70 +46,49 @@ flowchart TB
   style TP6 fill:#2fd05c,color:#fff,stroke:#0e6626,stroke-width:2px
   style TP7 fill:#2fd05c,color:#fff,stroke:#0e6626,stroke-width:2px
 
-  %% Data / Output (yellow for visibility on dark)
-  DT[Datatables<br>Files: .csv / .json]
+  %% Data / Output
+  DT["Datatables & Files\n(.csv/.json)"]
   style DT fill:#f7f323,color:#000,stroke:#888800,stroke-width:2px
 
-  %% Database (orange for contrast)
-  DB[(MySQL Database<br><i>findings, claims</i>)]
+  %% Database
+  DB["MySQL Database\nFindings & Claims"]
   style DB fill:#ff9514,color:#fff,stroke:#b55000,stroke-width:3px
 
-  %% Slack Notifier (cyan)
-  SLK[Slack Bot<br><i>reports & alerts</i>]
+  %% Slack Notifier
+  SLK["Slack Bot\nReports & Alerts"]
   style SLK fill:#00eaea,color:#222,stroke:#008888,stroke-width:2px
 
-  %% Azure Takeover (deep purple)
-  AZ[Azure Automation<br><i>live takeover evidence</i>]
+  %% Azure Takeover
+  AZ["Azure Automation\nTakeover Evidence"]
   style AZ fill:#9c60ff,color:#fff,stroke:#370099,stroke-width:2px
 
-  %% Test Automation Block (gray)
-  subgraph Test_Automation
-    T1[Unit Tests<br><i>(pytest)</i>]
-    T2[Concurrency Tests]
-    T3[Integration Tests]
-  end
+  %% Test Automation
+  T1["Unit Tests"]
+  T2["Concurrency Tests"]
+  T3["Integration Tests"]
+
   style T1 fill:#333,color:#fff,stroke:#fff,stroke-width:2px
   style T2 fill:#333,color:#fff,stroke:#fff,stroke-width:2px
   style T3 fill:#333,color:#fff,stroke:#fff,stroke-width:2px
 
-  %% Legend
-  Legend["<b>Legend:</b><br>
-      Blue: Orchestrator<br>
-      Violet: Scanners<br>
-      Green: Worker Pools<br>
-      Yellow: Temporary/process data<br>
-      Orange: Database<br>
-      Cyan: Slack notifications<br>
-      Purple: Azure/Cloud automation<br>
-      Gray: Test/QA Coverage"]
-  style Legend fill:#222,color:#fff,stroke:none
-
-  %% Flows
-  BO --> S1a
-  BO --> S1b
-  BO --> S1c
-  BO --> S1d
-  BO --> S1e
-  BO --> S1f
-  BO --> S1g
-
-  S1a --> TP1 --> DT
-  S1b --> TP2 --> DT
-  S1c --> TP3 --> DT
-  S1d --> TP4 --> DT
-  S1e --> TP5 --> DT
-  S1f --> TP6 --> DT
-  S1g --> TP7 --> DT
+  %% Flows (VERTICAL)
+  BO --> S1a --> TP1 --> DT
+  BO --> S1b --> TP2 --> DT
+  BO --> S1c --> TP3 --> DT
+  BO --> S1d --> TP4 --> DT
+  BO --> S1e --> TP5 --> DT
+  BO --> S1f --> TP6 --> DT
+  BO --> S1g --> TP7 --> DT
 
   DT --> DB
 
-  S1a --"Live results"--> DB
-  S1b --"Live results"--> DB
-  S1c --"Live results"--> DB
-  S1d --"CVE findings"--> DB
-  S1e --"Takeover/claims"--> DB
-  S1f --"Host/service data"--> DB
-  S1g --"Misconfig discoveries"--> DB
+  S1a --Results--> DB
+  S1b --Results--> DB
+  S1c --Results--> DB
+  S1d --Results--> DB
+  S1e --Results/Claims--> DB
+  S1f --Results--> DB
+  S1g --Results--> DB
 
   S1a --Notify--> SLK
   S1b --Notify--> SLK
@@ -123,17 +98,13 @@ flowchart TB
   S1f --Notify--> SLK
   S1g --Notify--> SLK
 
-  S1e --"Claim workflow"--> AZ
+  S1e --Claim Workflow--> AZ
 
-  %% QA coverage (dashed, indirect)
+  %% Test coverage links (dashed, indirect)
   T1 -.-> S1a
   T2 -.-> TP1
   T3 -.-> S1e
-
-  %% Legend placement
-  Legend --- BO
 ```
-
 
 **Key Components:**
 

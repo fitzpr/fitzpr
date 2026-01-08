@@ -8,12 +8,12 @@ _A Python-driven automation and notification engine featuring secure, scalable, 
 
 ```mermaid
 flowchart TD
-    A[Job Scheduler] --> B((Job Queue))
+    A[Job Scheduler] --> B[Job Queue]
     B --> C[Worker Pool / ThreadPoolExecutor]
-    C --> D[Datatables (Pandas/Memory)]
+    C --> D[Datatables]
     D --> E[MySQL Database]
     C --> F[Slack API Integration]
-    C --> G[Other APIs/Integrations]
+    C --> G[Other Integrations]
     style C fill:#b4d5ff,stroke:#333,stroke-width:2px
     style F fill:#f9f,stroke:#333,stroke-width:2px
     style E fill:#fdc,stroke:#333,stroke-width:2px

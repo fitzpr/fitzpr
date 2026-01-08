@@ -8,15 +8,53 @@ _A Python-driven automation and notification engine featuring secure, scalable, 
 
 ```mermaid
 flowchart TD
-    A[Job Scheduler] --> B[Job Queue]
-    B --> C[Worker Pool / ThreadPoolExecutor]
-    C --> D[Datatables]
-    D --> E[MySQL Database]
-    C --> F[Slack API Integration]
-    C --> G[Other Integrations]
-    style C fill:#b4d5ff,stroke:#333,stroke-width:2px
-    style F fill:#f9f,stroke:#333,stroke-width:2px
-    style E fill:#fdc,stroke:#333,stroke-width:2px
+    %% SYSTEM GROUPS
+    subgraph "Scheduler Layer"
+        A1[Job Scheduler<br/>(APScheduler/schedule)]
+        A1 -->|Enqueue Jobs| Q1[Job Queue]
+    end
+
+    subgraph "Worker & Execution Layer"
+        Q1 --> P1[Worker Pool]
+        P1 -.-> T1["Thread Controls<br/>(ThreadPoolExecutor)"]
+        P1 -->|Parallel Tasks| W1[Job Worker]
+        W1 -->|Process Data| DT[Datatables<br/>(In-Memory, Pandas)]
+        T1 --> P1
+    end
+
+    subgraph "Persistence & Data Layer"
+        DT -->|Batch Ops/Transform| DB[(MySQL Database)]
+        DB <-->|Read/Write| DT
+    end
+
+    subgraph "Integrations"
+        W1 -- Notify --> SLK[Slack Bot<br/>(slack_sdk)]
+        W1 -- API Call --> EXT[3rd Party APIs]
+    end
+
+    %% TEST AUTOMATION
+    subgraph "Test Automation"
+      TA1["Unit Tests<br/>(pytest, unittest)"]
+      TA2["Integration/E2E Tests"]
+      TA3["Performance/Threading Tests"]
+    end
+    TA1 -.-> A1
+    TA2 -.-> W1
+    TA2 -.-> DB
+    TA3 -.-> P1
+
+    %% STYLES
+    style Q1 fill:#b9e3fa,stroke:#333,stroke-width:2px
+    style P1 fill:#b4d5ff,stroke:#333,stroke-width:2px
+    style W1 fill:#d2e7c5,stroke:#333,stroke-width:2px
+    style DT fill:#ffe4b3,stroke:#333,stroke-width:2px
+    style DB fill:#fdc,stroke:#333,stroke-width:2px
+    style SLK fill:#f9f,stroke:#333,stroke-width:2px
+    style EXT fill:#e5e5e5,stroke:#333,stroke-width:2px
+    style T1 fill:#f7fafc,stroke:#333,stroke-width:1px
+    style TA1 fill:#fffbe6,stroke:#888,stroke-dasharray: 5 5;
+    style TA2 fill:#fffbe6,stroke:#888,stroke-dasharray: 5 5;
+    style TA3 fill:#fffbe6,stroke:#888,stroke-dasharray: 5 5;
 ```
 
 **Key Components:**

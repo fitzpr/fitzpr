@@ -8,73 +8,65 @@ _A Python-driven automation and notification engine featuring secure, scalable, 
 
 ```mermaid
 flowchart TD
-    %% Batch orchestration
-    BO[Batch Orchestrator batch_scan py] -->|Pulls Subdomains| DB[(MySQL Database)]
-    BO -->|Start scripts| SCRIPTS
+    BO[Batch Orchestrator batch scan py]
+    DB[MySQL Database]
+    SLK[Slack Notifier]
+    DT[Datatables and Files]
+    AZ[Azure Takeover Automation]
 
-    %% Scanner Scripts
-    subgraph Scanners_Per_Target
-        S1a[Subdub py Subdomain Enum]
-        S1b[Filezer py File Discovery]
-        S1c[Panelz py Admin Panel Scan]
-        S1d[Cveez py CVE Scan]
-        S1e[Cnamer py Takeover Detection]
-        S1f[Hoster2 py Service Enum]
-        S1g[Miscon py Misconfig Scan]
-    end
-    SCRIPTS --> S1a
-    SCRIPTS --> S1b
-    SCRIPTS --> S1c
-    SCRIPTS --> S1d
-    SCRIPTS --> S1e
-    SCRIPTS --> S1f
-    SCRIPTS --> S1g
+    BO -->|Pulls Subdomains| DB
+    BO -->|Start Scripts| S1
 
-    %% Per-script Worker Pools
-    S1a --ThreadPool--> TP1[Worker Pool]
-    S1b --ThreadPool--> TP2[Worker Pool]
-    S1c --ThreadPool--> TP3[Worker Pool]
-    S1d --ThreadPool--> TP4[Worker Pool]
-    S1e --ThreadPool--> TP5[Worker Pool]
-    S1f --ThreadPool--> TP6[Worker Pool]
-    S1g --ThreadPool--> TP7[Worker Pool]
+    %% Each scanner script has its own node and thread pool
+    S1a[Subdub Scanner]
+    S1b[Filezer Scanner]
+    S1c[Panelz Scanner]
+    S1d[Cveez Scanner]
+    S1e[Cnamer Scanner]
+    S1f[Hoster2 Scanner]
+    S1g[Miscon Scanner]
 
-    %% Data flow (files/in-memory)
-    TP1 --Processes--> DT[Datatables and Files]
-    TP2 --Processes--> DT
-    TP3 --Processes--> DT
-    TP4 --Processes--> DT
-    TP5 --Processes--> DT
-    TP6 --Processes--> DT
-    TP7 --Processes--> DT
+    S1 --> S1a
+    S1 --> S1b
+    S1 --> S1c
+    S1 --> S1d
+    S1 --> S1e
+    S1 --> S1f
+    S1 --> S1g
 
-    %% Database writeback
-    S1a -->|Findings| DB
-    S1b -->|Findings| DB
-    S1c -->|Findings| DB
-    S1d -->|Findings| DB
-    S1e -->|Findings Claims| DB
-    S1f -->|Findings| DB
-    S1g -->|Findings| DB
+    %% Worker pools and data flow
+    S1a --> TP1[Worker Pool] --> DT
+    S1b --> TP2[Worker Pool] --> DT
+    S1c --> TP3[Worker Pool] --> DT
+    S1d --> TP4[Worker Pool] --> DT
+    S1e --> TP5[Worker Pool] --> DT
+    S1f --> TP6[Worker Pool] --> DT
+    S1g --> TP7[Worker Pool] --> DT
 
-    %% Slack notifications
-    S1a --Status and Error--> SLK[Slack Notifier]
-    S1b --Status and Error--> SLK
-    S1c --Status and Error--> SLK
-    S1d --Status and Error--> SLK
-    S1e --Status and Error--> SLK
-    S1f --Status and Error--> SLK
-    S1g --Status and Error--> SLK
+    %% Reporting and notifications
+    S1a --> SLK
+    S1b --> SLK
+    S1c --> SLK
+    S1d --> SLK
+    S1e --> SLK
+    S1f --> SLK
+    S1g --> SLK
 
-    %% Azure Takeover
-    S1e --Azure Claims--> AZ[Azure Takeover Automation]
+    S1a --> DB
+    S1b --> DB
+    S1c --> DB
+    S1d --> DB
+    S1e --> DB
+    S1f --> DB
+    S1g --> DB
 
-    %% Testing coverage
-    subgraph Test_Coverage
-      T1[Unit Tests]
-      T2[Concurrency Tests]
-      T3[Integration Tests]
-    end
+    %% Azure takeover is special to Cnamer
+    S1e --> AZ
+
+    %% Testing as extra nodes
+    T1[Unit Tests]
+    T2[Concurrency Tests]
+    T3[Integration Tests]
     T1 -.-> S1a
     T2 -.-> TP1
     T3 -.-> S1e

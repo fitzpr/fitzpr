@@ -7,14 +7,19 @@ _A Python-driven automation and notification engine featuring secure, scalable, 
 ## 📈 System Architecture
 
 ```mermaid
-flowchart TD
-  %% Top-level batch orchestrator
-  BO["Batch Orchestrator (batch_scan.py)"]
-  BO --> DB[(MySQL Database)]
+flowchart TB
+  %% Batch Orchestrator Block
+  subgraph 0 [Batch Orchestrator]
+    BO["batch_scan.py\n(cron or CLI)"]
+  end
 
-  %% Scanner group
-  subgraph Scanners
-    direction LR
+  %% Database Block
+  subgraph 1 [MySQL Database]
+    DB[(MySQL)]
+  end
+
+  %% Scanner Scripts Block
+  subgraph 2 [Scanner Scripts]
     S1a["Subdub.py"]
     S1b["Filezer.py"]
     S1c["Panelz.py"]
@@ -24,28 +29,34 @@ flowchart TD
     S1g["Miscon.py"]
   end
 
-  %% Worker pools (one under each script for clarity)
-  subgraph WorkerPools
-    direction LR
-    TP1["Worker Pool"]
-    TP2["Worker Pool"]
-    TP3["Worker Pool"]
-    TP4["Worker Pool"]
-    TP5["Worker Pool"]
-    TP6["Worker Pool"]
-    TP7["Worker Pool"]
+  %% Worker Pools Block
+  subgraph 3 [Worker Pools (per script)]
+    TP1["ThreadPool"]
+    TP2["ThreadPool"]
+    TP3["ThreadPool"]
+    TP4["ThreadPool"]
+    TP5["ThreadPool"]
+    TP6["ThreadPool"]
+    TP7["ThreadPool"]
   end
 
-  %% Datafiles/datatable (single shared, lower center)
-  DT["Datatables & Files"]
+  %% In-memory / Files Block
+  DT["Datatables & Files (lists, output)"]
 
-  %% Slack notification (right side)
-  SLK["Slack Notifier"]
+  %% Slack Notifier
+  SLK{{"Slack\nNotifier"}}
 
-  %% Azure Takeover special (off to the right for Cnamer)
-  AZ["Azure Takeover Automation"]
+  %% Azure Takeover Automation
+  AZ["Azure Takeover\nAutomation"]
 
-  %% Wiring: top orchestrator launches scripts
+  %% Test Automation Block
+  subgraph 4 [Test Automation]
+    T1["Unit Tests"]
+    T2["Concurrency Tests"]
+    T3["Integration Tests"]
+  end
+
+  %% Flows
   BO --> S1a
   BO --> S1b
   BO --> S1c
@@ -53,51 +64,40 @@ flowchart TD
   BO --> S1e
   BO --> S1f
   BO --> S1g
-  %% Each script to its unique worker pool, nice map
-  S1a --> TP1
-  S1b --> TP2
-  S1c --> TP3
-  S1d --> TP4
-  S1e --> TP5
-  S1f --> TP6
-  S1g --> TP7
-  %% All pools connect down to shared datatable/files
-  TP1 --> DT
-  TP2 --> DT
-  TP3 --> DT
-  TP4 --> DT
-  TP5 --> DT
-  TP6 --> DT
-  TP7 --> DT
-  %% DB: orchestrator reads from; each script writes to
-  S1a -- Results --> DB
-  S1b -- Results --> DB
-  S1c -- Results --> DB
-  S1d -- Results --> DB
-  S1e -- Results/Claims --> DB
-  S1f -- Results --> DB
-  S1g -- Results --> DB
-  %% Slack Notifier
-  S1a -- Notify --> SLK
-  S1b -- Notify --> SLK
-  S1c -- Notify --> SLK
-  S1d -- Notify --> SLK
-  S1e -- Notify --> SLK
-  S1f -- Notify --> SLK
-  S1g -- Notify --> SLK
-  %% Cnamer to Azure
-  S1e -- Claim --> AZ
 
-  %% Testing/QA (at very bottom)
-  subgraph Testing_Coverage["Test Automation"]
-    T1["Unit Tests"]
-    T2["Concurrency Tests"]
-    T3["Integration Tests"]
-  end
+  S1a --> TP1 --> DT
+  S1b --> TP2 --> DT
+  S1c --> TP3 --> DT
+  S1d --> TP4 --> DT
+  S1e --> TP5 --> DT
+  S1f --> TP6 --> DT
+  S1g --> TP7 --> DT
+
+  DT --> DB
+
+  S1a --"Results/Status"--> DB
+  S1b --"Results/Status"--> DB
+  S1c --"Results/Status"--> DB
+  S1d --"Results/Status"--> DB
+  S1e --"Results/Claims"--> DB
+  S1f --"Results/Status"--> DB
+  S1g --"Results/Status"--> DB
+
+  S1a --"Notify"--> SLK
+  S1b --"Notify"--> SLK
+  S1c --"Notify"--> SLK
+  S1d --"Notify"--> SLK
+  S1e --"Notify"--> SLK
+  S1f --"Notify"--> SLK
+  S1g --"Notify"--> SLK
+
+  S1e --"Claim"--> AZ
+
   T1 -.-> S1a
   T2 -.-> TP1
   T3 -.-> S1e
 ```
+
 
 **Key Components:**
 

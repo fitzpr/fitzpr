@@ -122,216 +122,158 @@ flowchart TB
 
 ---
 
-# LoLLM
+# mov37
 
-_A comprehensive AI/ML security testing framework featuring automated target detection, OWASP LLM Top 10 testing, and real-world vulnerability discovery._
+_Universal Authentication Vulnerability Discovery Platform - Scan any authentication library, discover vulnerabilities, and generate exploitable demonstrations using exact vulnerable code patterns._
 
 ---
 
-## 📈 System Architecture
+## 🏗️ Authentication Security Architecture
 
 ```mermaid
 flowchart TB
   %% Entry Point
-  Main["lollm.py\nMain Entry Point"]
+  Main["universal_auth_scanner.py\nMain Scanner Entry Point"]
   style Main fill:#158aff,color:#fff,stroke:#0055aa,stroke-width:2px
 
-  %% Reconnaissance Layer
-  Recon["Reconnaissance Engine\nTarget Detection"]
-  style Recon fill:#e658ea,color:#fff,stroke:#9800a1,stroke-width:2px
+  %% Repository Analysis
+  Clone["Repository Cloner\nGitHub/GitLab Integration"]
+  style Clone fill:#e658ea,color:#fff,stroke:#9800a1,stroke-width:2px
 
-  %% Testing Modules
-  LLM["LLM Testing Module\nOWASP LLM Top 10"]
-  WebApp["Web App Scanner\nML-Specific Tests"]
-  API["API Testing Module\nREST API Security"]
+  %% AI Analysis Engine
+  AI["Azure GPT-5 Engine\nLibrary Understanding"]
+  style AI fill:#9c60ff,color:#fff,stroke:#370099,stroke-width:2px
+
+  %% Vulnerability Detection
+  Scan["Vulnerability Scanner\nAuth-Specific Patterns"]
+  Extract["Code Pattern Extractor\nExact Vulnerable Code"]
   
-  style LLM fill:#2fd05c,color:#fff,stroke:#0e6626,stroke-width:2px
-  style WebApp fill:#2fd05c,color:#fff,stroke:#0e6626,stroke-width:2px
-  style API fill:#2fd05c,color:#fff,stroke:#0e6626,stroke-width:2px
+  style Scan fill:#2fd05c,color:#fff,stroke:#0e6626,stroke-width:2px
+  style Extract fill:#2fd05c,color:#fff,stroke:#0e6626,stroke-width:2px
 
-  %% Test Suites
-  T1["Prompt Injection Tests"]
-  T2["Data Poisoning Tests"]
-  T3["Model Extraction Tests"]
-  T4["Info Disclosure Tests"]
+  %% Demo Generation
+  Service["Vulnerable Service Generator\nIdentical Code Implementation"]
+  Exploit["Targeted Exploit Generator\nWorking Attack Scripts"]
+  Demo["Demo Package Assembly\nComplete Testing Environment"]
   
-  style T1 fill:#ff9514,color:#fff,stroke:#b55000,stroke-width:2px
-  style T2 fill:#ff9514,color:#fff,stroke:#b55000,stroke-width:2px
-  style T3 fill:#ff9514,color:#fff,stroke:#b55000,stroke-width:2px
-  style T4 fill:#ff9514,color:#fff,stroke:#b55000,stroke-width:2px
+  style Service fill:#ff9514,color:#fff,stroke:#b55000,stroke-width:2px
+  style Exploit fill:#ff9514,color:#fff,stroke:#b55000,stroke-width:2px
+  style Demo fill:#ff9514,color:#fff,stroke:#b55000,stroke-width:2px
 
-  %% Reporting
-  Report["Vulnerability Reports\nJSON/TXT Output"]
+  %% Output
+  Report["Business Impact Assessment\nTeam-Ready Exploits"]
   style Report fill:#f7f323,color:#000,stroke:#888800,stroke-width:2px
 
   %% Flow
-  Main --> Recon
-  Recon --> LLM
-  Recon --> WebApp
-  Recon --> API
-  
-  LLM --> T1
-  LLM --> T4
-  WebApp --> T2
-  WebApp --> T3
-  API --> T1
-  API --> T4
-  
-  T1 --> Report
-  T2 --> Report
-  T3 --> Report
-  T4 --> Report
+  Main --> Clone
+  Clone --> AI
+  AI --> Scan
+  Scan --> Extract
+  Extract --> Service
+  Extract --> Exploit
+  Service --> Demo
+  Exploit --> Demo
+  Demo --> Report
 ```
 
-**Key Components:**
+**Core Authentication Security Components:**
 
-- **Reconnaissance Engine:** Auto-detects target type (LLM API, ML web app, REST API) through HTTP probing and endpoint discovery.
-- **LLM Testing Module:** Implements OWASP LLM Top 10 tests including prompt injection, system prompt leakage, and unbounded consumption.
-- **Web App Scanner:** ML-specific security tests for directory traversal, file upload vulnerabilities, and data poisoning vectors.
-- **Modular Architecture:** Extensible design allows custom test cases and integration with CI/CD pipelines.
-- **Real-World Validation:** Successfully detected vulnerabilities in HTB Academy "Red Teaming AI" lab.
+- **Universal Repository Scanner:** Automatically clones and analyzes any authentication library (OAuth, JWT, SAML, Basic Auth, API Keys) from GitHub, GitLab, or other Git repositories.
+- **AI-Powered Analysis Engine:** Uses Azure GPT-5 to understand library purpose, identify authentication flows, and predict context-specific vulnerabilities beyond simple pattern matching.
+- **Vulnerability Pattern Detection:** Specialized scanning for authentication-specific issues—hardcoded secrets, weak token validation, insecure flows, missing security controls.
+- **Exact Code Extraction:** Extracts actual vulnerable code patterns from repositories and implements identical structures in demonstration services.
+- **Targeted Exploit Development:** Creates working exploits that specifically target the vulnerable patterns found, enabling teams to test their own implementations.
+- **Enterprise Demo Generation:** Produces complete testing packages with Docker services, exploitation scripts, and business impact documentation.
 
 ---
 
-## 🛡️ Security Testing Capabilities
+## 🎯 Authentication Vulnerability Discovery
 
-LoLLM provides comprehensive coverage across multiple security frameworks:
+mov37 specializes in discovering real-world authentication vulnerabilities with immediate business impact:
 
-### OWASP LLM Top 10 Testing
+### Authentication Security Testing Coverage
 
-| Vulnerability | Test Coverage | Real-World Impact |
-|--------------|---------------|-------------------|
-| LLM01: Prompt Injection | Direct, Indirect, Role-play | Successfully bypassed content filters |
-| LLM02: Sensitive Info Disclosure | API key leakage, Training data extraction | Extracted PII from deployed models |
-| LLM07: System Prompt Leakage | Multiple extraction techniques | Recovered full system instructions |
-| LLM08: Data Poisoning | Training data manipulation detection | HTB lab validation |
-| LLM10: Model Theft | Directory traversal, Unauthorized access | Extracted 256KB model file |
-
-### Web Application Security
-
-| CWE | Vulnerability Type | Automated Detection | HTB Lab Result |
-|-----|-------------------|---------------------|----------------|
-| 22  | Path Traversal | ✅ Automated payload testing | ✅ **CRITICAL** - Model extraction |
-| 434 | Unrestricted File Upload | ✅ Malicious file detection | Not tested |
-| 20  | Improper Input Validation | ✅ Boundary testing | In progress |
-| 502 | Deserialization | ✅ Pickle exploit detection | Planned |
+| Vulnerability Type | Detection Method | Real-World Impact |
+|-------------------|------------------|-------------------|
+| **Hardcoded Credentials** | Pattern matching + AI analysis | Direct authentication bypass |
+| **ROPC Vulnerabilities** | OAuth flow analysis | Password spraying attacks |
+| **JWT Security Issues** | Token validation testing | Session hijacking |
+| **OAuth Flow Manipulation** | State/redirect validation | Account takeover |
+| **Weak Client Authentication** | Implementation analysis | API access control bypass |
+| **Session Management Flaws** | Token lifecycle testing | Privilege escalation |
 
 ### Real-World Validation
 
-**HTB Academy "Red Teaming AI" Lab Results:**
+**Microsoft MSAL.js Vulnerability Discovery:**
 ```bash
-🚨 VULNERABLE: /data_poisoning/download
-   Payload: ../../spam_detector_model.bin
-   Severity: CRITICAL
-   File Size: 256,609 bytes
-   🚩 FLAG (MD5): 954c0f3a93b410ea40352e5fdaccc1ed
+🚨 VULNERABILITY FOUND: PASSWORD_GRANT="password" pattern
+   Location: msal-browser.min.js:2
+   Risk: CRITICAL - Direct authentication bypass
+   Pattern: MSALPasswordGrantHandler with hardcoded credentials
+   
+✅ DEMO GENERATED: msal_vulnerability_demo/
+   Service: Uses EXACT vulnerable code from Microsoft's library
+   Exploit: Working password spraying attacks
+   Business Impact: Teams can test same vulnerability in their MSAL.js implementations
 ```
 
----
+**Enterprise Authentication Testing Results:**
 
-## 🤖 Technologies
-
-- **Core:** Python 3.8+, Requests, Threading
-- **Testing Frameworks:** Custom modular test classes with extensibility
-- **Reporting:** JSON/TXT output formats with severity classification
-- **Integration:** CI/CD ready, API-first design for automation
-- **Security Standards:** OWASP LLM Top 10, OWASP Web Top 10, OWASP ML Top 10
+| Authentication Library | Vulnerabilities Found | Exploits Generated | Business Impact |
+|----------------------|---------------------|-------------------|----------------|
+| Microsoft MSAL.js | ROPC + Hardcoded secrets | ✅ Working demonstrations | HIGH - Credential attacks |
+| Authlib (Python) | Client secret exposure | ✅ OAuth token manipulation | MEDIUM - API access |
+| Spring Security | Session fixation | ✅ Privilege escalation | HIGH - Admin bypass |
 
 ---
 
-## 🚀 Use Cases
+## 🛠️ Authentication Security Technologies
 
-**Red Team Engagements**
-- Automated reconnaissance of AI/ML systems
-- Vulnerability identification in production LLM deployments
-- Model extraction and analysis workflows
+- **Core Platform:** Python 3.9+, Git integration, Docker containerization
+- **AI Analysis:** Azure GPT-5 integration for intelligent library assessment  
+- **Vulnerability Detection:** Authentication-specific pattern matching and analysis
+- **Code Replication:** Exact vulnerable pattern extraction and implementation
+- **Exploit Generation:** Flask services, targeted attack scripts, Docker composition
+- **Enterprise Integration:** CI/CD ready, business-focused reporting
 
-**Bug Bounty Research**
-- Rapid scanning of AI-powered applications
-- OWASP LLM Top 10 coverage for bounty programs
-- Automated payload delivery with evasion techniques
+---
 
-**Security Auditing**
-- Compliance testing for AI/ML systems
-- Vulnerability assessment automation with detailed reporting
-- Stakeholder-ready reports with actionable remediation
+## 🚀 Enterprise Use Cases
+
+**Security Team Authentication Assessment**
+- Automated vulnerability discovery in authentication libraries used by organization
+- Proof-of-concept exploit generation for discovered vulnerabilities
+- Concrete evidence of authentication security risks for business stakeholders
+
+**Development Team Security Validation**
+- Pre-deployment authentication security testing with working exploits
+- Vulnerable code pattern identification in existing authentication implementations
+- Security training using real-world authentication vulnerability demonstrations
+
+**Penetration Testing & Red Team Operations**
+- Authentication-focused security testing with immediately usable exploits
+- OAuth, JWT, SAML vulnerability discovery and practical demonstration
+- Authentication bypass and privilege escalation testing frameworks
+
+---
+
+## 🎯 Key Innovation: Identical Code Usage
+
+Unlike theoretical security research, mov37 creates demonstrations using the **exact same vulnerable code patterns** found in the original repositories:
+
+**What makes this valuable:**
+- Teams can run the same exploits against their own authentication implementations
+- Validates whether production systems have identical vulnerabilities
+- Provides concrete proof that specific code patterns are exploitable
+- Enables immediate testing of discovered vulnerabilities in real environments
 
 ---
 
 ## 🌟 Project Links
 
-- **Repository:** [github.com/fitzpr/LoLLM](https://github.com/fitzpr/LoLLM)
-- **Documentation:** Comprehensive README with usage examples and API reference
-- **License:** [MIT License](https://github.com/fitzpr/LoLLM/blob/main/LICENSE)
-
----
-
-## 🛡️ Security Achievements
-
-Thadius was built and operated with a security-first approach, directly informed by my ongoing offensive security research and real bug bounty impact.
-
-### 🔒 [View my HackerOne Profile →](https://hackerone.com/atoma/hacktivity?type=user)
-
-**Select Bounty Highlights:**
-- FanDuel: $1,000
-- AT&T: $750
-- Upserve: $300
-
-**Vulnerability Experience:**
-
-| CWE | Vulnerability Type                       | Submissions | Bounties | Severity Highlights |
-|-----|-----------------------------------------|-------------|----------|--------------------|
-| 200 | Information Disclosure                  | 20          | $300     | -                  |
-| 287 | Improper Authentication (Generic)       | 6           | $750     | -                  |
-| 284 | Improper Access Control (Generic)       | 5           | $100     | 1 Critical         |
-| 352 | Cross-Site Request Forgery (CSRF)       | 5           | -        | -                  |
-| 79  | Cross-site Scripting (XSS) - Reflected  | 5           | -        | -                  |
-| 22  | Path Traversal                          | 4           | -        | 1 Critical         |
-| 601 | Open Redirect                           | 4           | -        | -                  |
-| 918 | Server-Side Request Forgery (SSRF)      | 4           | -        | -                  |
-| 260 | Password in Configuration File          | 2           | $50      | -                  |
-
-**OWASP Top 10 2017 Coverage:**
-- A2: Broken Authentication (3)
-- A5: Broken Access Control (4)
-- A6: Security Misconfiguration (1)
-- A7: Cross-Site Scripting (1)
-
-**Bug Bounty Report Examples:**
-- Path Traversal (Critical)
-- Improper Access Control (Critical)
-- Information Disclosure
-- Improper Authentication
-
-> _I apply a security mindset and lessons learned from real-world offensive testing to every codebase I own—including Thadius._
-
----
-
-## 🚦 Testing Methodology
-
-- **Unit Testing:** Isolates core logic, mocks all integrations.
-- **Integration/E2E:** Validates workflows with real databases (test), and full notification loops.
-- **Concurrency & Race Tests:** Uses stress scenarios to validate thread safety.
-
----
-
-## 🤖 Technologies
-
-- Python 3.x, threading/pools
-- Pandas
-- MySQL (with SQLAlchemy or native connector)
-- Slack SDK
-- pytest, unittest
-
----
-
-## 🌟 Contact
-
-- **Security, Collaboration, or Consultation:**  
-  [atoma on HackerOne](https://hackerone.com/atoma/hacktivity?type=user)
-
----
-
-## 📜 License
+- **Repository:** [github.com/fitzpr/mov37](https://github.com/fitzpr/mov37)
+- **Documentation:** Comprehensive authentication security testing guide
+- **License:** [MIT License](https://github.com/fitzpr/mov37/blob/main/LICENSE)
+- **Specialization:** Authentication & Authorization Security Research
 
 [MIT](LICENSE)

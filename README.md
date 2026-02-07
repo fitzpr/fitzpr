@@ -133,35 +133,44 @@ _Universal Authentication Vulnerability Discovery Platform - Scan any authentica
 ```mermaid
 flowchart TB
   %% Entry Point
-  Main["universal_auth_scanner.py\nMain Scanner Entry Point"]
+  Main["universal_auth_scanner.py
+  Main Scanner Entry Point"]
   style Main fill:#158aff,color:#fff,stroke:#0055aa,stroke-width:2px
 
   %% Repository Analysis
-  Clone["Repository Cloner\nGitHub/GitLab Integration"]
+  Clone["Repository Cloner
+  GitHub/GitLab Integration"]
   style Clone fill:#e658ea,color:#fff,stroke:#9800a1,stroke-width:2px
 
   %% AI Analysis Engine
-  AI["Azure GPT-5 Engine\nLibrary Understanding"]
+  AI["Azure GPT-5 Engine
+  Library Understanding"]
   style AI fill:#9c60ff,color:#fff,stroke:#370099,stroke-width:2px
 
   %% Vulnerability Detection
-  Scan["Vulnerability Scanner\nAuth-Specific Patterns"]
-  Extract["Code Pattern Extractor\nExact Vulnerable Code"]
+  Scan["Vulnerability Scanner
+  Auth-Specific Patterns"]
+  Extract["Code Pattern Extractor
+  Exact Vulnerable Code"]
   
   style Scan fill:#2fd05c,color:#fff,stroke:#0e6626,stroke-width:2px
   style Extract fill:#2fd05c,color:#fff,stroke:#0e6626,stroke-width:2px
 
   %% Demo Generation
-  Service["Vulnerable Service Generator\nIdentical Code Implementation"]
-  Exploit["Targeted Exploit Generator\nWorking Attack Scripts"]
-  Demo["Demo Package Assembly\nComplete Testing Environment"]
+  Service["Vulnerable Service Generator
+  Identical Code Implementation"]
+  Exploit["Targeted Exploit Generator
+  Working Attack Scripts"]
+  Demo["Demo Package Assembly
+  Complete Testing Environment"]
   
   style Service fill:#ff9514,color:#fff,stroke:#b55000,stroke-width:2px
   style Exploit fill:#ff9514,color:#fff,stroke:#b55000,stroke-width:2px
   style Demo fill:#ff9514,color:#fff,stroke:#b55000,stroke-width:2px
 
   %% Output
-  Report["Business Impact Assessment\nTeam-Ready Exploits"]
+  Report["Business Impact Assessment
+  Team-Ready Exploits"]
   style Report fill:#f7f323,color:#000,stroke:#888800,stroke-width:2px
 
   %% Flow
